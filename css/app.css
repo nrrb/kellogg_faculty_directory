@@ -1,0 +1,36 @@
+/* app css stylesheet */
+
+body {
+  padding-top: 20px;
+  text-align: center;
+}
+
+input {
+	height: 50px !important;
+	font-size: 50px !important;
+	width: 50% !important;
+}
+
+#img_cache {
+  display: none;
+}
+
+li {
+	height: 400px;
+	list-style: none;
+	float: left;
+	width: 200px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #ccc;
+	text-align: center;
+	padding: 5px;
+}
+
+li img {
+	margin-bottom: 15px;
+}
+
+li a {
+	font-size: 18pt;
+}
