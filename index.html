@@ -22,11 +22,13 @@
           <li ng-repeat="professor in faculty | filter:query">
           <a href="{{professor.url}}"><img ng-src="{{professor.headshot_image_url}}"></a>
             <p><a href="{{professor.url}}">{{professor.name}}</a></p>
-            <p>
+            <span class="info"><p>
+              {{professor.netid}}<br>
               {{professor.title}}<br>
               {{professor.department}}<br>
-              {{professor.office}}
-            </p>
+              {{professor.office}}<br>
+              {{professor.phone}}
+            </p></span>
           </li>
         </ul>
       </div>
