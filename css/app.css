@@ -27,8 +27,14 @@ li {
 	padding: 5px;
 }
 
+li span.info {
+	text-align: left;
+}
+
 li img {
 	margin-bottom: 15px;
+	min-width: 166px;
+	min-height: 202px;
 }
 
 li a {
