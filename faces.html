@@ -2,7 +2,7 @@
 <html lang="en" ng-app="kfkApp">
 <head>
   <meta charset="utf-8">
-  <title>Kellogg Faculty Facebook</title>
+  <title>Kellogg faculty Facebook</title>
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/bootstrap.css">
   <script src="lib/angular/angular.js"></script>
@@ -19,16 +19,8 @@
     <div class="row-fluid">
       <div class="span12">
         <ul class="faculty">
-          <li ng-repeat="person in faculty | filter:query" class="full_details">
-          <a href="{{person.url}}" target="_none"><img ng-src="{{person.headshot_image_url}}" src="img/placeholder.png" width="166" height="202"></a>
-            <p><a href="{{person.url}}">{{person.name}}</a></p>
-            <span class="info"><p>
-              {{person.netid}}<br>
-              {{person.title}}<br>
-              {{person.department}}<br>
-              {{person.office}}<br>
-              {{person.phone}}
-            </p></span>
+          <li ng-repeat="person in faculty | filter:query">
+          <a href="{{person.url}}" target="_none"><img ng-src="{{person.headshot_image_url}}" src="img/placeholder.png" width="166" height="202" title="{{person.name}} - {{person.netid}} - {{person.title}} - {{person.department}} - {{person.location}} - {{person.email}} - {{person.phone}}"></a>
           </li>
         </ul>
       </div>
@@ -37,7 +29,7 @@
   <div class="container-fluid">
     <div class="row-fluid">
       <div class="span12">
-        <a href="https://github.com/tothebeat/kff/tree/gh-pages">Source Code</a>
+        <a href="https://bitbucket.org/nickatkellogg/kellogg_faculty_directory/">Source Code</a>
       </div>
     </div>
   </div>
