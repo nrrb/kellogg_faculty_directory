@@ -10,13 +10,13 @@ logging.basicConfig(level=logging.INFO)
 
 def get_faculty_netids():
     response = requests.get("http://www.kellogg.northwestern.edu/faculty/advanced_search.aspx")
-    soup = BeautifulSoup(response.content)
+    soup = BeautifulSoup(response.content, "lxml")
     return sorted([option['value'] for option in soup.find(id="plcprimarymaincontent_1_selBrowseByName").find_all("option") if option['value']])
         
 def get_faculty_info_by_netid(netid):
     BASE_URL = "http://www.kellogg.northwestern.edu/"
     response = requests.get("http://www.kellogg.northwestern.edu/faculty/faculty_search_results.aspx?netid={0}".format(netid))
-    soup = BeautifulSoup(response.content)
+    soup = BeautifulSoup(response.content, "lxml")
     # Rough dimensions of headshot image: 166x202
     headshot_image_tag = soup.find(id="imgFacultyImage")
     headshot_image_url = urljoin(BASE_URL, headshot_image_tag['src']) if headshot_image_tag else ''
