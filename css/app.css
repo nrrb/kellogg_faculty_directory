@@ -20,17 +20,17 @@ li {
     float: left;
 }
 
-li img {
+li img.headshot {
 	min-width: 166px;
 	min-height: 202px;
 }
 
-li a {
+li a.title {
 	font-size: 18pt;
 }
 
 li.full_details {
-	height: 400px;
+	height: 450px;
 	width: 200px;
 	border-style: solid;
 	border-width: 1px;
@@ -39,7 +39,7 @@ li.full_details {
 	padding: 5px;
 }
 
-li.full_details img {
+li.full_details img.headshot {
 	margin-bottom: 15px;
 }
 

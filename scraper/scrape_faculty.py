@@ -3,10 +3,16 @@ import datetime
 import json
 import logging
 import os
+import sys
 import time
-from urlparse import urljoin
+if sys.version_info[0] == 2:
+    from urlparse import urljoin
+elif sys.version_info[0] == 3:
+    from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 import requests
+
+TODAY_STRING = datetime.datetime.now().strftime('%Y%m%d')
 
 logging.basicConfig(level=logging.INFO)
 
@@ -14,17 +20,19 @@ def get_faculty_netids():
     response = requests.get("http://www.kellogg.northwestern.edu/faculty/advanced_search.aspx")
     soup = BeautifulSoup(response.content, "lxml")
     return sorted([option['value'] for option in soup.find(id="plcprimarymaincontent_1_selBrowseByName").find_all("option") if option['value']])
-        
+
 def get_faculty_info_by_netid(netid):
     def _save_results_to_file(content, filename):
-        date_string = datetime.datetime.now().strftime('%Y%m%d')
-        save_folder = 'html/' + date_string
+        save_folder = 'html/' + TODAY_STRING
         if not os.path.isdir(save_folder):
             os.makedirs(save_folder)
         save_path = save_folder + '/' + filename
         logging.info("Saving content to {0}...".format(save_path))
         with open(save_path, 'wb') as f:
             f.write(content)
+
+    def _get_results_from_file(filename):
+        save_folder = 'html/' + TODAY_STRING
 
     def _get_headshot_image_url(soup):
         # Rough dimensions of headshot image: 166x202
@@ -58,6 +66,14 @@ def get_faculty_info_by_netid(netid):
     def _get_phone(soup):
         return soup.find(id="lblPhone").string if soup.find(id="lblPhone") else ''
 
+    def _get_research_interests(soup):
+        try:
+            research = soup.find('div', id='research')
+            research_interests = research.find('div', id='leftResearch').find('div', class_='entry').get_text().strip()
+            return research_interests
+        except:
+            return None
+
     BASE_URL = "http://www.kellogg.northwestern.edu/"
     request_url = "http://www.kellogg.northwestern.edu/faculty/faculty_search_results.aspx?netid={0}".format(netid)
     response = requests.get(request_url)
@@ -71,11 +87,13 @@ def get_faculty_info_by_netid(netid):
             'office': _get_office_number(soup),
             'department': _get_department(soup),
             'title': _get_title(soup),
-            'phone': _get_phone(soup)}
+            'phone': _get_phone(soup),
+            'research_interests': _get_research_interests(soup),
+            'date_updated': TODAY_STRING}
 
 def save_dict_list_to_csv(dict_list, filename):
     import csv
-    with open(filename, 'wb') as f:
+    with open(filename, 'w') as f:
         dw = csv.DictWriter(f, fieldnames=dict_list[0].keys())
         dw.writeheader()
         dw.writerows(dict_list)
@@ -95,7 +113,7 @@ if __name__=="__main__":
 
     # Add in netid to the information we've collected
     faculty = []
-    for netid, info in info_by_netid.iteritems():
+    for netid, info in info_by_netid.items():
         faculty.append(info)
         faculty[-1]['netid'] = netid
 
@@ -110,10 +128,10 @@ if __name__=="__main__":
 
     logging.info("Saving data (with names) to faculty_with_names.json...")
     with open('faculty_with_names.json', 'w') as f:
-        faculty_with_names = filter(lambda f: f['name'], faculty)
+        faculty_with_names = list(filter(lambda f: f['name'], faculty))
         json.dump(faculty_with_names, f)
 
     logging.info("Saving data (with names and faces) to faculty_with_names_and_faces.json...")
     with open('faculty_with_names_and_faces.json', 'w') as f:
-        faculty_with_names_and_faces = filter(lambda f: f['name'] and f['headshot_image_url'], faculty)
+        faculty_with_names_and_faces = list(filter(lambda f: f['name'] and f['headshot_image_url'], faculty))
         json.dump(faculty_with_names_and_faces, f)
